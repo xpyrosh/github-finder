@@ -6,9 +6,19 @@ import axios from 'axios';
 import './App.css';
 
 class App extends React.Component {
+
+  state = {
+    users: [],
+    loading: false
+  }
+
   // lifestyle method
-  componentDidMount() {
-    axios.get('https://api.github.com/users').then(res => console.log(res.data));
+  async componentDidMount() {
+    this.setState({loading: true});
+
+    const res = await axios.get('https://api.github.com/users');
+    
+    this.setState({users:res.data, loading:false});
   }
 
   // render is a life cycle method
@@ -20,7 +30,7 @@ class App extends React.Component {
          <Navbar title="Github Finder" icon='fab fa-github'></Navbar>*/}
         <Navbar/>
         <div className="container">
-        <Users/>
+        <Users loading={this.state.loading} users={this.state.users}/>
         <h1>Hello from react</h1>
         </div>
       </div>
