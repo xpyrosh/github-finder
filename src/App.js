@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from './components/layout/Navbar';
 // import UserItem from './components/users/UserItem';
 import Users from './components/users/Users';
+import Search from './components/users/Search';
 import axios from 'axios';
 import './App.css';
 
@@ -21,6 +22,11 @@ class App extends React.Component {
     this.setState({users:res.data, loading:false});
   }
 
+  // Search github users
+  searchUsers = (text) => {
+    console.log(text);
+  };
+
   // render is a life cycle method
   render() {
     return (
@@ -30,6 +36,7 @@ class App extends React.Component {
          <Navbar title="Github Finder" icon='fab fa-github'></Navbar>*/}
         <Navbar/>
         <div className="container">
+        <Search searchUsers={this.searchUsers}/>
         <Users loading={this.state.loading} users={this.state.users}/>
         <h1>Hello from react</h1>
         </div>
