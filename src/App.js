@@ -3,6 +3,7 @@ import Navbar from './components/layout/Navbar';
 // import UserItem from './components/users/UserItem';
 import Users from './components/users/Users';
 import Search from './components/users/Search';
+import Alert from './components/layout/Alert'
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import './App.css';
@@ -11,7 +12,8 @@ class App extends React.Component {
 
   state = {
     users: [],
-    loading: false
+    loading: false,
+    alert: null
   }
 
   static propTypes = {
@@ -44,6 +46,13 @@ class App extends React.Component {
     loading: false
   });
 
+  // Set Alert
+  setAlert = (msg, type) => {
+    this.setState({ alert: {msg: msg, type: type }});
+
+    setTimeout(() => this.setState({alert: null}), 5000);
+  };
+
   // render is a life cycle method
   render() {
     const { users, loading } = this.state;
@@ -55,10 +64,12 @@ class App extends React.Component {
          <Navbar title="Github Finder" icon='fab fa-github'></Navbar>*/}
         <Navbar/>
         <div className="container">
+          <Alert alert={this.state.alert}/>
         <Search 
           searchUsers={this.searchUsers} 
           clearUsers={this.clearUsers} 
           showClear={users.length > 0 ? true : false}
+          setAlert={this.setAlert}
         />
         <Users loading={loading} users={users}/>
         <h1>Hello from react</h1>
