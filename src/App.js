@@ -3,6 +3,7 @@ import Navbar from './components/layout/Navbar';
 // import UserItem from './components/users/UserItem';
 import Users from './components/users/Users';
 import Search from './components/users/Search';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import './App.css';
 
@@ -13,22 +14,40 @@ class App extends React.Component {
     loading: false
   }
 
+  static propTypes = {
+    searchUsers: PropTypes.func.isRequired,
+    clearUsers: PropTypes.func.isRequired,
+    showUsers: PropTypes.bool.isRequired
+  };
+
   // lifestyle method
   async componentDidMount() {
     this.setState({loading: true});
 
-    const res = await axios.get(`https://api.github.com/users?${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+    const res = await axios.get(`https://api.github.com/users?&client_id${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
     
     this.setState({users:res.data, loading:false});
   }
 
   // Search github users
-  searchUsers = (text) => {
-    console.log(text);
+  searchUsers = async text => {
+    this.setState({loading: true});
+
+    const res = await axios.get(`https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+
+    this.setState({ users: res.data.items, loading:false });
   };
+
+  // Clear users from state
+  clearUsers = () => this.setState({
+    users:[],
+    loading: false
+  });
 
   // render is a life cycle method
   render() {
+    const { users, loading } = this.state;
+
     return (
       // JSX not HTML
       <div className="App">
@@ -36,8 +55,12 @@ class App extends React.Component {
          <Navbar title="Github Finder" icon='fab fa-github'></Navbar>*/}
         <Navbar/>
         <div className="container">
-        <Search searchUsers={this.searchUsers}/>
-        <Users loading={this.state.loading} users={this.state.users}/>
+        <Search 
+          searchUsers={this.searchUsers} 
+          clearUsers={this.clearUsers} 
+          showClear={users.length > 0 ? true : false}
+        />
+        <Users loading={loading} users={users}/>
         <h1>Hello from react</h1>
         </div>
       </div>
