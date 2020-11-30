@@ -15,14 +15,11 @@ const Search = ({ searchUsers, showClear, clearUsers, setAlert }) => {
             searchUsers(text);
             setText('');
         }
-
     }
 
     const onChange = (e) => {
         setText(e.target.value);
     };
-
-    
 
     return (
         <div>
